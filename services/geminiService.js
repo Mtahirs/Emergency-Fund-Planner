@@ -1,14 +1,19 @@
 import { GoogleGenAI } from "@google/genai";
 
 const API_KEY = process.env.API_KEY;
+let ai;
 
-if (!API_KEY) {
-    throw new Error("API_KEY environment variable not set.");
+if (API_KEY) {
+    ai = new GoogleGenAI({ apiKey: API_KEY });
+} else {
+    console.warn("API_KEY environment variable not set. AI features will be disabled.");
 }
 
-const ai = new GoogleGenAI({ apiKey: API_KEY });
-
 export const generateAdvice = async (answers, calculatedTarget) => {
+  if (!ai) {
+      return "[HEADER]AI Service Not Available\nPersonalized advice could not be generated because the connection to the AI service is not configured. Your financial calculations are still correct and provide a great starting point.";
+  }
+
   const { income, expenses, jobStability, dependents, currentSavings, debt, timeline, desiredFund, currency } = answers;
 
   const incomeNum = Number(income);

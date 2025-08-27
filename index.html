@@ -38,45 +38,57 @@
               'confetti-fall': 'confettiFall 3s ease-out 1 forwards',
             },
             keyframes: {
-              fadeIn: {
-                '0%': { opacity: 0 },
-                '100%': { opacity: 1 },
-              },
-              slideInLeft: {
-                '0%': { transform: 'translateX(100%)', opacity: 0 },
-                '100%': { transform: 'translateX(0)', opacity: 1 },
-              },
-              slideOutLeft: {
-                '0%': { transform: 'translateX(0)', opacity: 1 },
-                '100%': { transform: 'translateX(-100%)', opacity: 0 },
-              },
-              popIn: {
-                '0%': { transform: 'scale(0.8)', opacity: 0 },
-                '100%': { transform: 'scale(1)', opacity: 1 },
-              },
-               confettiFall: {
-                '0%': { transform: 'translateY(-100vh) rotateZ(0deg)', opacity: 1 },
-                '100%': { transform: 'translateY(100vh) rotateZ(720deg)', opacity: 0 },
-              },
+              fadeIn: { '0%': { opacity: 0 }, '100%': { opacity: 1 } },
+              slideInLeft: { '0%': { transform: 'translateX(100%)', opacity: 0 }, '100%': { transform: 'translateX(0)', opacity: 1 } },
+              slideOutLeft: { '0%': { transform: 'translateX(0)', opacity: 1 }, '100%': { transform: 'translateX(-100%)', opacity: 0 } },
+              popIn: { '0%': { transform: 'scale(0.8)', opacity: 0 }, '100%': { transform: 'scale(1)', opacity: 1 } },
+              confettiFall: { '0%': { transform: 'translateY(-100vh) rotateZ(0deg)', opacity: 1 }, '100%': { transform: 'translateY(100vh) rotateZ(720deg)', opacity: 0 } },
             }
           }
         }
       }
     </script>
+    <link rel="stylesheet" href="./style.css">
     <script type="importmap">
 {
   "imports": {
     "@google/genai": "https://aistudiocdn.com/@google/genai@^1.15.0",
-    "react": "https://esm.sh/react@18.2.0",
-    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
     "jspdf": "https://esm.sh/jspdf@2.5.1",
+    "react": "https://aistudiocdn.com/react@^19.1.1",
     "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/"
   }
 }
 </script>
-</head>
+  </head>
   <body class="bg-slate-100 dark:bg-dark">
-    <div id="root"></div>
-    <script type="module" src="./index.jsx"></script>
+    <div id="celebration-container" class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-50"></div>
+    <div class="min-h-screen text-slate-800 dark:text-slate-200 flex flex-col items-center justify-center p-4 font-sans transition-colors duration-300">
+      <div class="w-full max-w-2xl mx-auto relative">
+        <div id="theme-toggle-container"></div>
+        <header class="text-center mb-6 animate-fade-in pt-8">
+          <h1 class="text-4xl md:text-5xl font-bold text-primary dark:text-accent">Emergency Fund Planner</h1>
+          <p class="text-slate-600 dark:text-slate-400 mt-2">Secure your future, one step at a time.</p>
+        </header>
+        
+        <main class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-6 md:p-8 relative overflow-hidden min-h-[500px]">
+          <div id="milestone-container" class="absolute top-4 right-4 z-20"></div>
+
+          <!-- Questionnaire View -->
+          <div id="questionnaire-view">
+            <div id="progress-bar-container"></div>
+            <div id="question-card-container" class="transition-all duration-500"></div>
+          </div>
+
+          <!-- Result View -->
+          <div id="result-view" class="hidden">
+            <!-- Results will be injected here by script.js -->
+          </div>
+        </main>
+         <footer class="text-center mt-6 text-sm text-slate-500 dark:text-slate-400">
+            <p>Powered by Gemini</p>
+        </footer>
+      </div>
+    </div>
+    <script type="module" src="./script.js"></script>
   </body>
 </html>
