@@ -1,0 +1,5 @@
+{
+  "name": "Emergency Fund Calculator",
+  "description": "An intelligent calculator that helps you determine your emergency fund target and creates a personalized savings plan. It uses AI to provide tailored advice, tracks your progress with milestones, and celebrates your journey to financial security.",
+  "requestFramePermissions": []
+}
