@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import type { Answers, Question, Result } from './types';
 import { QUESTIONS } from './constants';
 import QuestionCard from './components/QuestionCard';
@@ -6,6 +6,7 @@ import ProgressBar from './components/ProgressBar';
 import ResultCard from './components/ResultCard';
 import { generateAdvice } from './services/geminiService';
 import Celebration from './components/Celebration';
+import ThemeToggle from './components/ThemeToggle';
 
 const App: React.FC = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
@@ -18,6 +19,25 @@ const App: React.FC = () => {
   const [isAnimatingOut, setIsAnimatingOut] = useState<boolean>(false);
   const [showCelebration, setShowCelebration] = useState<boolean>(false);
   
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark' || savedTheme === 'light') {
+        return savedTheme;
+    }
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  });
+
+  useEffect(() => {
+    const root = window.document.documentElement;
+    root.classList.remove(theme === 'light' ? 'dark' : 'light');
+    root.classList.add(theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const handleThemeToggle = () => {
+    setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
+  };
+
   const currentQuestion: Question = QUESTIONS[currentQuestionIndex];
   const progress = useMemo(() => ((currentQuestionIndex) / QUESTIONS.length) * 100, [currentQuestionIndex]);
   const currentAnswer = answers[currentQuestion.id] || '';
@@ -130,8 +150,9 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen bg-light dark:bg-dark text-slate-800 dark:text-slate-200 flex flex-col items-center justify-center p-4 font-sans transition-colors duration-300">
       {showCelebration && <Celebration />}
-      <div className="w-full max-w-2xl mx-auto">
-        <header className="text-center mb-6 animate-fade-in">
+      <div className="w-full max-w-2xl mx-auto relative">
+        <ThemeToggle theme={theme} onToggle={handleThemeToggle} />
+        <header className="text-center mb-6 animate-fade-in pt-8">
           <h1 className="text-4xl md:text-5xl font-bold text-primary dark:text-accent">Emergency Fund Planner</h1>
           <p className="text-slate-600 dark:text-slate-400 mt-2">Secure your future, one step at a time.</p>
         </header>

@@ -69,6 +69,7 @@ const ResultCard: React.FC<ResultCardProps> = ({ result, isLoading, error, onRes
     const doc = new jsPDF();
     const pageMargin = 15;
     const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
     const textWidth = pageWidth - (pageMargin * 2);
     let y = 20;
 
@@ -109,11 +110,17 @@ const ResultCard: React.FC<ResultCardProps> = ({ result, isLoading, error, onRes
         
         if (!title) return;
 
-        if (y > 270) { // Check for page break
+        // Estimate height of the upcoming block
+        const splitContent = doc.splitTextToSize(content, textWidth);
+        const blockHeight = 8 + (splitContent.length * 4.5) + 8; // Height for title + content + padding
+
+        // Check if the entire block fits on the page. If not, create a new page.
+        if (y + blockHeight > pageHeight - pageMargin) { 
             doc.addPage();
-            y = 20;
+            y = pageMargin; // Reset y for the new page
         }
 
+        // Render the block
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(14);
         doc.text(title, pageMargin, y);
@@ -121,7 +128,6 @@ const ResultCard: React.FC<ResultCardProps> = ({ result, isLoading, error, onRes
 
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(11);
-        const splitContent = doc.splitTextToSize(content, textWidth);
         doc.text(splitContent, pageMargin, y);
         y += (splitContent.length * 4.5) + 8; // Adjust y position based on text lines
     });
